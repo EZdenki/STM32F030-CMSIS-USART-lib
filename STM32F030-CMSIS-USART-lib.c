@@ -50,7 +50,7 @@
 // USART_putc
 // Output a single character to the USART Tx pin (PA2)
 void
-USART_putc(char c)
+USART_putc( char c )
 {
     while( !(USART1->ISR & USART_ISR_TXE ) )
     {   // Wait until the transmit data register is empty
@@ -64,7 +64,7 @@ USART_putc(char c)
 // Output a string to the USART Tx pin (PA2). Adds linefeed after string.
 // String should be null terminated (standard C string)
 void
-USART_puts( const char *s )
+USART_puts( char *s )
 {
     while( *s )
         USART_putc( *s++ );
@@ -73,11 +73,11 @@ USART_puts( const char *s )
 
 
 // char
-// getchar( void )
+// USART_getc( void )
 // Waits for a character on the serial port and returns the character
 // when received.
 char
-USART_getc()
+USART_getc( void )
 {
     while( !( USART1->ISR & USART_ISR_RXNE ) )
     {
