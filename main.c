@@ -1,48 +1,27 @@
-//  main.c
-//  Test program for STM32F030-CMSIS-USART-lib.c Minimalist UART
+//  main.c for STM32F030-CMSIS-USART-lib.c
+//    Test program for STM32F030-CMSIS-USART-lib.c Minimalist UART
 //  
-//  Version 1.0   7/24/2023   Updated core files and comments
+//    Mike Shegedin, EZdenki.com
+//
+//    Version 1.1   16 Aug 2023   Added baud rate as parameter to USART_init.
+//    Version 1.0   24 Jul 2023   Updated core files and comments
 //
 //  ==========================================================================================
+//
 //  Hardware: STM32030xx, USB-Serial dongle
-//  Software: PuTTY (or other serial terminal program)
-//  Mike Shegedin, 04/2023
+//  Software: PuTTY for Windows or Linux (or any other serial terminal program)
 //
 //  Summary:
 //  --------
 //  Set up the USART for UART (RS-232) IO with character RxTx capability.
-//  Initiall output "Hello World" with first 'H' output as a character and
+//  Initial output "Hello World" with first 'H' output as a character and
 //  'ello World!" output as a string. Then echo any terminal input back to
 //  the terminal. Indicate <Return> by displaying '<RETURN>'.
 //
-//  USART1_Tx = PA2, Alternate Function 1
-//  USART1_Rx = PA3, Alternate Function 1
+//  USART1_Tx = PA2 (pin 8)
+//  USART1_Rx = PA3 (pin 9)
 //
-//  Baudrate Calculation
-//  --------------------
-//  Assuming the internal RC clock: f(CK) = 8 MHz
-//  Mantissa = whole part of f(CK) / (16 * Baud)
-//  Fraction = remainder of above * 16
-//      f(CK)    Baud     Mantissa   Fraction
-//      -----   -------   --------   --------
-//      8 MHz     9,600      52          1
-//              115,200       4          5
-//              460,800       1          1
-//              500,000       1          0
-//
-//  If calculating in program:
-//      uartDiv  = freqClk / baud
-//      mantissa = uartDiv / 16
-//      fraction = uartDiv % 16
-//
-//  Steps to Set Up UART on STM32F030xx:
-//  ------------------------------------
-//  1. Enable GPIO Port A via RCC->AHBENR
-//  2. Set PA2 and PA3 as Alternate Functions via GPIOA->MODER
-//  3. Set Alternate Function 1 for PA2 and PA3 via GPIOA->AFR[0]
-//  4. Enable USART1 perpheral via RCC->APB2ENR
-//  5. Set Baudrate via USART1->BRR
-//  6. Enable (turn on) Tx, Rx, and USART via USART1->CR1
+//  See STM32F030-CMSIS-USART-lib.c for details on how to set up USART.
 
 #include "stm32f030x6.h"  // Primary CMSIS header file
 #include "STM32F030-CMSIS-USART-lib.c"
@@ -52,7 +31,7 @@ main( void )
 {
     char c; // Will be character to echo
 
-    USART_init();
+    USART_init( 115200 );
 
     // Send some text...
     USART_putc('H');            // Output one character 'H' to terminal

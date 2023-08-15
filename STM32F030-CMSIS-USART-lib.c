@@ -1,19 +1,23 @@
 //  STM32F030-CMSIS-USART-lib.c
-//  Minimalist Serial UART library for the STM32F030
+//    Minimalist Serial UART library for the STM32F030
 //
-//  Version 1.0   7/24/2023   Updated core files and comments
+//    Mike Shegedin, EZdenki.com
+//
+//    Version 1.1   16 Aug 2023   Added baud rate as parameter to USART_init.
+//    Version 1.0   24 Jul 2023   Updated core files and comments
 //
 //  ==========================================================================================
+//
 //  Hardware: STM32030xx, USB-Serial dongle
-//  Software: PuTTY (or other serial terminal program)
-//  Software: PuTTY (or other serial terminal program)
+//  Software: PuTTY for Windows or Linux (or any other serial terminal program)
 //
 //  Summary:
 //  --------
 //  Library of most basic functions to support serial communication to and from the STM32F030.
+//  Note that only USART1 is currently supported.
 //
-//  USART1_Tx = PA2, Alternate Function 1
-//  USART1_Rx = PA3, Alternate Function 1
+//  USART1_Tx = PA2 (pin 8), Alternate Function 1
+//  USART1_Rx = PA3 (pin 9), Alternate Function 1
 //
 //  Baudrate Calculation
 //  --------------------
@@ -88,11 +92,20 @@ USART_getc( void )
 
 // void
 // USART_init( void )
-// Initializes USART port and Tx/Rx pins and readies the port to receive and
-// transmit data.
+// Initializes USART port and Tx/Rx pins and readies the port to receive and transmit data
+// at the specified baud rate. Possible baud rates are from 300 to 460,800.
 void
-USART_init( void )
+USART_init( uint32_t baudrate )
 {
+    uint32_t speedMant, speedFrac;
+    
+    // Calculate the mantissa (speedMant) and fraction (speedFrac) values for an 8 MHz CPU
+    // Note that the 8E6 constants are cast as uint32_t, otherwise gcc will consider them
+    // to be floating constants with much more overhead.
+    speedMant  = (uint32_t)8E6 / baudrate / 16;
+    speedFrac = ( (uint32_t)8E6 - baudrate * speedMant * 16 ) / baudrate;
+
+
     // Enable GPIO Port A
     RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
 
@@ -108,7 +121,8 @@ USART_init( void )
     RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
     
     // Set Baudrate by loading the baudrate Mantissa and Fractional part as described above
-    USART1->BRR = (4<<USART_BRR_DIV_MANTISSA_Pos) | (5<<USART_BRR_DIV_FRACTION_Pos);
+    USART1->BRR = ( speedMant << USART_BRR_DIV_MANTISSA_Pos ) |
+                  ( speedFrac << USART_BRR_DIV_FRACTION_Pos );
     
     // Enable (turn on) Tx, Rx, and USART
     USART1->CR1 = (USART_CR1_TE | USART_CR1_RE | USART_CR1_UE) ;
