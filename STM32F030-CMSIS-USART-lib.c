@@ -1,49 +1,52 @@
-//  STM32F030-CMSIS-USART-lib.c
-//    Minimalist Serial UART library for the STM32F030
-//
-//    Mike Shegedin, EZdenki.com
-//
-//    Version 1.1   16 Aug 2023   Added baud rate as parameter to USART_init.
-//    Version 1.0   24 Jul 2023   Updated core files and comments
-//
 //  ==========================================================================================
+//  STM32F030-CMSIS-USART-lib.c
+//  ------------------------------------------------------------------------------------------
+//  Minimalist Serial UART library for the STM32F030
+//  ------------------------------------------------------------------------------------------
+//  https://github.com/EZdenki/STM32F030-CMSIS-USART-lib
+//  Released under the MIT License
+//  Copyright (c) 2023
+//  Mike Shegedin, EZdenki.com
+//  Version 1.1   16 Aug 2023   Added baud rate as parameter to USART_init.
+//  Version 1.0   24 Jul 2023   Updated core files and comments
+//  ------------------------------------------------------------------------------------------
+//  Target Devices: STM32F030xx and a USB-Serial dongle
 //
 //  Hardware: STM32030xx, USB-Serial dongle
 //  Software: PuTTY for Windows or Linux (or any other serial terminal program)
 //
+//  ------------------------------------------------------------------------------------------
 //  Summary:
-//  --------
-//  Library of most basic functions to support serial communication to and from the STM32F030.
-//  Note that only USART1 is currently supported.
+//    Library of most basic functions to support serial communication to and from the
+//    STM32F030. Note that only USART1 is currently supported.
 //
-//  USART1_Tx = PA2 (pin 8), Alternate Function 1
-//  USART1_Rx = PA3 (pin 9), Alternate Function 1
+//    USART1_Tx = PA2 (pin 8), Alternate Function 1
+//    USART1_Rx = PA3 (pin 9), Alternate Function 1
 //
-//  Baudrate Calculation
-//  --------------------
-//  Assuming the internal RC clock: f(CK) = 8 MHz
-//  Mantissa = whole part of f(CK) / (16 * Baud)
-//  Fraction = remainder of above * 16
-//      f(CK)    Baud     Mantissa   Fraction
-//      -----   -------   --------   --------
-//      8 MHz     9,600      52          1
-//              115,200       4          5
-//              460,800       1          1
-//              500,000       1          0
+//    Baudrate Calculation:
+//      Assuming the internal RC clock: f(CK) = 8 MHz
+//        Mantissa = whole part of f(CK) / (16 * Baud)
+//        Fraction = remainder of above * 16
+//          f(CK)    Baud     Mantissa   Fraction
+//          -----   -------   --------   --------
+//          8 MHz     9,600      52          1
+//                  115,200       4          5
+//                  460,800       1          1
+//                  500,000       1          0
 //
-//  If calculating in program:
-//      uartDiv  = freqClk / baud
-//      mantissa = uartDiv / 16
-//      fraction = uartDiv % 16
+//        If calculating in program:
+//          uartDiv  = freqClk / baud
+//          mantissa = uartDiv / 16
+//          fraction = uartDiv % 16
 //
-//  Steps to Set Up UART on STM32F030xx:
-//  ------------------------------------
-//  1. Enable GPIO Port A via RCC->AHBENR
-//  2. Set PA2 and PA3 as Alternate Functions via GPIOA->MODER
-//  3. Set Alternate Function 1 for PA2 and PA3 via GPIOA->AFR[0]
-//  4. Enable USART1 peripheral via RCC->APB2ENR
-//  5. Set Baudrate via USART1->BRR
-//  6. Enable (turn on) Tx, Rx, and USART via USART1->CR1
+//    Steps to Set Up UART on STM32F030xx:
+//      1. Enable GPIO Port A via RCC->AHBENR
+//      2. Set PA2 and PA3 as Alternate Functions via GPIOA->MODER
+//      3. Set Alternate Function 1 for PA2 and PA3 via GPIOA->AFR[0]
+//      4. Enable USART1 peripheral via RCC->APB2ENR
+//      5. Set Baudrate via USART1->BRR
+//      6. Enable (turn on) Tx, Rx, and USART via USART1->CR1
+//  ==========================================================================================
 
 #ifndef __STM32F030_CMSIS_USART_LIB_C
 #define __STM32F030_CMSIS_USART_LIB_C

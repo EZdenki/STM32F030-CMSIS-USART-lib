@@ -1,27 +1,30 @@
-//  main.c for STM32F030-CMSIS-USART-lib.c
-//    Test program for STM32F030-CMSIS-USART-lib.c Minimalist UART
-//  
-//    Mike Shegedin, EZdenki.com
-//
-//    Version 1.1   16 Aug 2023   Added baud rate as parameter to USART_init.
-//    Version 1.0   24 Jul 2023   Updated core files and comments
-//
 //  ==========================================================================================
-//
-//  Hardware: STM32030xx, USB-Serial dongle
+//  main.c for STM32F030-CMSIS-USART-lib.c
+//  ------------------------------------------------------------------------------------------
+//  Test program for STM32F030-CMSIS-USART-lib.c Minimalist UART
+//  ------------------------------------------------------------------------------------------
+//  https://github.com/EZdenki/STM32F030-CMSIS-USART-lib
+//  Released under the MIT License
+//  Copyright (c) 2023
+//  Mike Shegedin, EZdenki.com
+//  Version 1.1   16 Aug 2023   Added baud rate as parameter to USART_init.
+//  Version 1.0   24 Jul 2023   Updated core files and comments
+//  ------------------------------------------------------------------------------------------
+//  Target Devices: STM32F030xx and a USB-Serial dongle
 //  Software: PuTTY for Windows or Linux (or any other serial terminal program)
-//
-//  Summary:
-//  --------
-//  Set up the USART for UART (RS-232) IO with character RxTx capability.
-//  Initial output "Hello World" with first 'H' output as a character and
-//  'ello World!" output as a string. Then echo any terminal input back to
-//  the terminal. Indicate <Return> by displaying '<RETURN>'.
-//
-//  USART1_Tx = PA2 (pin 8)
-//  USART1_Rx = PA3 (pin 9)
+//  ------------------------------------------------------------------------------------------
+//  Hardware Setup:
+//    USART1_Tx = PA2 (pin 8)
+//    USART1_Rx = PA3 (pin 9)
+//  ------------------------------------------------------------------------------------------
+//  Functional Summary:
+//    Set up the USART for UART (RS-232) IO with character RxTx capability.
+//    Initially output "Hello World" with first 'H' output as a character and 'ello World!"
+//    output as a string. Then echo any terminal input back to the terminal.
+//    Indicate <Return> by displaying '<RETURN>'.
 //
 //  See STM32F030-CMSIS-USART-lib.c for details on how to set up USART.
+//  ==========================================================================================
 
 #include "stm32f030x6.h"  // Primary CMSIS header file
 #include "STM32F030-CMSIS-USART-lib.c"
