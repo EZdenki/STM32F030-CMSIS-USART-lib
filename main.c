@@ -36,11 +36,11 @@ main( void )
 {
     char c; // Will be character to echo
 
-    USART_init( USART1, 115200 );
+    USART_init( USART1, 112500 );
 
     // Send some text...
     USART_putc('H');              // Output one character 'H' to terminal
-    USART_puts("ello World!/n");  // Output rest of 'ellow World!'
+    USART_puts("ello World!\n");  // Output rest of 'ellow World!'
 
     USART_puts("Now type stuff on the terminal to be echoed...\n");
 
